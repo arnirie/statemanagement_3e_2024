@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:statemanagement_3e/models/product.dart';
 
 class Products extends ChangeNotifier {
-  List<Product> _items = [
-    Product(productCode: '123', nameDesc: 'Sample', price: 1200),
-  ];
+  List<Product> _items = [];
 
-  List<Product> get items {
-    return _items;
-  }
+  List<Product> get items => _items;
 
-  int get totalNoItems {
-    return _items.length;
-  }
+  int get totalNoItems => _items.length;
+
+  Product item(int index) => _items[index];
 
   void add(Product p) {
     _items.add(p);
+    notifyListeners();
+  }
+
+  void edit(Product p, int index) {
+    _items[index] = p;
     notifyListeners();
   }
 }

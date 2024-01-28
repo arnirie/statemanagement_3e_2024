@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:statemanagement_3e/models/product.dart';
 import 'package:statemanagement_3e/providers/productprovider.dart';
 import 'package:statemanagement_3e/screens/manageproduct.dart';
 
-class ViewProductsScreen extends StatefulWidget {
-  ViewProductsScreen({super.key});
+class ViewProductsScreen extends StatelessWidget {
+  void openAddScreen(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ManageProductScreen(),
+      ),
+    );
+  }
 
-  @override
-  State<ViewProductsScreen> createState() => _ViewProductsScreenState();
-}
-
-class _ViewProductsScreenState extends State<ViewProductsScreen> {
-  var listProducts = Products();
+  void openEditScreen(BuildContext context, int index) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ManageProductScreen(
+          index: index,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +37,7 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: null,
+            onPressed: () => openAddScreen(context),
             icon: const Icon(
               Icons.add,
               color: Colors.white,
@@ -35,17 +45,33 @@ class _ViewProductsScreenState extends State<ViewProductsScreen> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemBuilder: (_, index) {
-          return Card(
-            child: ListTile(
-              onTap: null,
-              title: Text(listProducts.items[index].nameDesc),
-              subtitle: Text(listProducts.items[index].productCode),
-            ),
+      body: Consumer<Products>(
+        builder: (_, products, child) {
+          return ListView.builder(
+            itemBuilder: (_, index) {
+              return Card(
+                child: ListTile(
+                  onTap: () => openEditScreen(context, index),
+                  leading: IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.favorite_outline),
+                  ),
+                  trailing: IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.shopping_cart_outlined),
+                  ),
+                  title: Text(products.items[index].nameDesc),
+                  subtitle: Text(products.items[index].productCode),
+                ),
+              );
+            },
+            itemCount: products.totalNoItems,
           );
         },
-        itemCount: listProducts.totalNoItems,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.shopping_cart),
       ),
     );
   }
