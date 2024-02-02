@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:statemanagement_3e/models/cartiitem.dart';
 import 'package:statemanagement_3e/models/product.dart';
+import 'package:statemanagement_3e/providers/cartprovider.dart';
 import 'package:statemanagement_3e/providers/productprovider.dart';
 import 'package:statemanagement_3e/screens/manageproduct.dart';
+import 'package:statemanagement_3e/screens/viewcart.dart';
 
 class ViewProductsScreen extends StatelessWidget {
   void openAddScreen(BuildContext context) {
@@ -21,6 +24,17 @@ class ViewProductsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void changeFavorite(BuildContext context, int index) {
+    //toggleFavorite
+    Provider.of<Products>(context, listen: false).toggleFavorite(index);
+  }
+
+  void addToCart(BuildContext context, String productCode) {
+    Provider.of<CartItems>(context, listen: false).add(CartItem(
+      productCode: productCode,
+    ));
   }
 
   @override
@@ -49,15 +63,19 @@ class ViewProductsScreen extends StatelessWidget {
         builder: (_, products, child) {
           return ListView.builder(
             itemBuilder: (_, index) {
+              print(index);
               return Card(
                 child: ListTile(
                   onTap: () => openEditScreen(context, index),
                   leading: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.favorite_outline),
+                    onPressed: () => changeFavorite(context, index),
+                    icon: Icon(products.items[index].isFavorite
+                        ? Icons.favorite
+                        : Icons.favorite_outline),
                   ),
                   trailing: IconButton(
-                    onPressed: () {},
+                    onPressed: () =>
+                        addToCart(context, products.items[index].productCode),
                     icon: Icon(Icons.shopping_cart_outlined),
                   ),
                   title: Text(products.items[index].nameDesc),
@@ -70,7 +88,9 @@ class ViewProductsScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => ViewCartScreen(),
+        )),
         child: Icon(Icons.shopping_cart),
       ),
     );

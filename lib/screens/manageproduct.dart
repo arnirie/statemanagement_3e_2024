@@ -84,6 +84,7 @@ class _ManageProductScreenState extends State<ManageProductScreen> {
                   productCode: codeController.text,
                   nameDesc: nameController.text,
                   price: double.parse(priceController.text),
+                  // isFavorite: true,
                 );
                 if (widget.index == null) {
                   provider.add(p);
